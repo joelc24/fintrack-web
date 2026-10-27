@@ -1,59 +1,79 @@
-# FinTrack
+# FinTrack Web
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 22.2.4.
+Frontend de **FinTrack**, una aplicación para llevar el control de ingresos y gastos,
+tanto personales como compartidos, con varias personas (perfiles) dentro de una misma cuenta.
 
-## Development server
+> Estado: en desarrollo. Este repositorio es el cliente web; la API está en
+> [joelc24/FinTrack](https://github.com/joelc24/FinTrack).
 
-To start a local development server, run:
+## Qué hace
+
+Una cuenta tiene varios perfiles, y cada perfil puede estar protegido con contraseña.
+Dentro de un perfil se registran ingresos y gastos, y un gasto puede ser propio o
+compartido con la cuenta. En los gastos compartidos se asigna cuánto le corresponde
+a cada perfil.
+
+### Funcionalidades
+
+- [ ] Registro y login de cuenta (en dos etapas: cuenta y perfil)
+- [ ] Selector de perfil, con desbloqueo por contraseña
+- [ ] Dashboard con resumen del mes y gráficos
+- [ ] Ingresos: listar, registrar, editar y eliminar
+- [ ] Gastos propios: listar, registrar, editar y eliminar
+- [ ] Gastos compartidos: listar, registrar y asignar cuánto le toca a cada perfil
+
+## Capturas
+
+[Aquí irán las capturas de pantalla cuando haya pantallas funcionando]
+
+## Tecnologías
+
+- Angular 22 (componentes standalone y signals)
+- Angular Material (tema Material 3)
+- Tailwind CSS v4 para el layout
+- ngx-echarts (gráficos)
+- TypeScript
+
+## Arquitectura
+
+Estructura por features, con el acceso a datos dentro de cada una:
+
+```
+src/app/
+├── core/        # servicios globales: auth, interceptores, perfiles, periodo
+├── layout/      # shell: toolbar y menú lateral
+├── shared/      # componentes reutilizables
+└── features/    # auth, profiles, dashboard, incomes, expenses, shared-expenses
+```
+
+## Cómo ejecutarlo
+
+Requisitos: Node.js y npm (desarrollado con Node 24) y la API de FinTrack en ejecución.
 
 ```bash
+git clone https://github.com/joelc24/fintrack-web.git
+cd fintrack-web
+npm install
 ng serve
 ```
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+La app queda en http://localhost:4200.
+[Próximamente indicaré aquí dónde se configura la URL de la API, cuando la tenga definida]
 
-## Code scaffolding
+## Scripts
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+| Comando | Descripción |
+|---|---|
+| `ng serve` | Servidor de desarrollo |
+| `ng build` | Build de producción |
+| `ng test` | Pruebas unitarias |
 
-```bash
-ng generate component component-name
-```
+## Notas de desarrollo
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+El repositorio incluye un `AGENTS.md` con las convenciones del proyecto para
+asistentes de IA. La lógica de negocio y el acceso a datos están escritos y revisados
+por el autor.
 
-```bash
-ng generate --help
-```
+## Autor
 
-## Building
-
-To build the project run:
-
-```bash
-ng build
-```
-
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-## Running unit tests
-
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
-
-```bash
-ng test
-```
-
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+Joel Camargo · [GitHub](https://github.com/joelc24) · [LinkedIn](https://linkedin.com/in/joel-camargo)

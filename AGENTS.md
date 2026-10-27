@@ -30,8 +30,7 @@ You are an expert in TypeScript, Angular, and scalable web application developme
 - Use `computed()` for derived state
 - Use `linkedSignal()` for state derived from multiple reactive sources that must stay synchronized
 - Prefer inline templates for small components
-- Prefer Signal Forms (`@angular/forms/signals`) for new forms. They are stable in Angular v22+ and provide signal-based state, type-safe field access, and schema-based validation
-- When not using Signal Forms, prefer Reactive forms instead of Template-driven ones
+- Forms: use Reactive Forms with `mat-form-field`. Do NOT use Signal Forms or Template-driven forms
 - Do NOT use `ngClass`, use `class` bindings instead
 - Do NOT use `ngStyle`, use `style` bindings instead
 - Do NOT import `CommonModule`, import only the directives and pipes the template uses, such as `AsyncPipe` or `DatePipe`
@@ -57,3 +56,52 @@ You are an expert in TypeScript, Angular, and scalable web application developme
 - Use the `providedIn: 'root'` option for singleton services
 - Prefer the `@Service` decorator over `@Injectable({providedIn: 'root'})` for new singleton services (Angular v22+)
 - Use the `inject()` function instead of constructor injection
+
+# FinTrack – Frontend
+
+## Stack
+Angular 22 (standalone, signals), Angular Material (tema M3 en un archivo .scss),
+Tailwind v4 solo para layout, espaciados y responsive. El proyecto usa CSS.
+No instalar otras librerías de UI. Gráficos: ngx-echarts.
+
+## Estructura (src/app)
+Arquitectura por features (vertical slices) con acceso a datos dentro de cada feature.
+
+- core/: servicios globales (singletons)
+  - auth/: sesión de cuenta y de perfil (signals), guards funcionales
+  - interceptors/: token y manejo de errores (401, renovación con refresh token)
+  - profiles/: lista de perfiles de la cuenta (la usan varias features)
+  - period/: mes seleccionado (signal global que leen todas las pantallas)
+- layout/shell/: mat-toolbar + mat-sidenav colapsable
+- shared/: solo lo que Material no trae (confirm-dialog, empty-state, money-input)
+- features/<nombre>/
+  - pages/: componentes de ruta (con la lógica)
+  - components/: componentes locales de la feature (presentación)
+  - data-access/: servicio HTTP de la feature y, solo si hace falta, un store con signals
+  - <nombre>.routes.ts: rutas locales con carga perezosa
+- Features: auth, profiles, dashboard, incomes, expenses, shared-expenses
+- app.config.ts (providers globales) y app.routes.ts (carga perezosa hacia las features)
+
+## Reglas de arquitectura
+- Las features no se importan entre sí. Lo compartido va en core/ o shared/.
+- Cada feature tiene su propio servicio de API en data-access/.
+- Un store (*.store.ts) solo si varias páginas comparten estado real
+  (por ejemplo shared-expenses con su detalle y asignación).
+- Las interfaces TypeScript de los DTOs viven en la feature que las usa;
+  si dos features las necesitan, van en core/.
+
+## Convenciones de código
+- Componentes standalone, signals para el estado, inject() en lugar del constructor
+  y control flow nativo (@if, @for). OnPush ya es el valor por defecto: no declararlo.
+- Seguir el estilo de nombres que genera el CLI (por ejemplo app.ts); no mezclar
+  con sufijos .component en el mismo proyecto.
+- Colores: usar los del tema (var(--mat-sys-primary)), no valores fijos.
+- No instalar paquetes nuevos sin pedirlo; si hace falta uno, avisar antes.
+
+## Reglas de interfaz
+- Eliminar un registro siempre pide confirmación con un diálogo (mat-dialog).
+- La lógica de negocio y los servicios los escribe el desarrollador; al generar
+  pantallas, crear solo la interfaz y dejar los métodos de servicio como TODO si no existen.
+
+## Comandos
+ng serve · ng build · ng test
