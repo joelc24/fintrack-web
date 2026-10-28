@@ -102,6 +102,9 @@ Arquitectura por features (vertical slices) con acceso a datos dentro de cada fe
 - Eliminar un registro siempre pide confirmación con un diálogo (mat-dialog).
 - La lógica de negocio y los servicios los escribe el desarrollador; al generar
   pantallas, crear solo la interfaz y dejar los métodos de servicio como TODO si no existen.
+- Diseño responsive: la página nunca hace scroll horizontal. Punto de corte md (768px).
+  En móvil: menú lateral superpuesto, tarjetas en una columna, tablas con scroll dentro de
+  su contenedor y diálogos a pantalla completa.
 
 ## Comandos
 ng serve · ng build · ng test
