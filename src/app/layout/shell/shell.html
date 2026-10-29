@@ -1,0 +1,109 @@
+<mat-sidenav-container class="h-dvh" autosize>
+  <mat-sidenav
+    [mode]="sidenavMode()"
+    [opened]="sidenavOpened()"
+    (openedChange)="sidenavOpened.set($event)"
+    [style.--mat-sidenav-container-width]="sidenavWidth()"
+  >
+    <!-- El scroll vive en el contenedor interno del sidenav, así que el recorte se hace aquí. -->
+    <div class="flex h-full flex-col overflow-x-hidden">
+      <!-- Logo -->
+      <div class="h-16 flex items-center px-4 mb-4">
+        <div
+          class="w-10 h-10 bg-(--mat-sys-primary) text-(--mat-sys-on-primary) rounded-lg flex items-center justify-center font-bold text-xl shrink-0"
+        >
+          F
+        </div>
+        @if (showLabels()) {
+          <span class="ml-3 text-xl font-bold text-(--mat-sys-primary) whitespace-nowrap">FinTrack</span>
+        }
+      </div>
+
+      <!-- Navigation Links -->
+      <div class="px-2">
+        <nav aria-label="Navegación principal">
+          @for (item of navItems; track item.link) {
+            <a
+              routerLinkActive="bg-(--mat-sys-secondary-container) text-(--mat-sys-on-secondary-container)"
+              [routerLink]="item.link"
+              [class.justify-center]="!showLabels()"
+              [attr.aria-label]="showLabels() ? null : item.label"
+              [matTooltip]="item.label"
+              [matTooltipDisabled]="showLabels()"
+              (click)="onNavigate()"
+              class="mb-1 flex min-h-12 items-center gap-3 rounded-full px-4 py-3 hover:bg-(--mat-sys-surface-container-high) focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-(--mat-sys-primary)"
+            >
+              <mat-icon class="shrink-0">{{ item.icon }}</mat-icon>
+              @if (showLabels()) {
+                <span class="min-w-0 leading-tight">{{ item.label }}</span>
+              }
+            </a>
+          }
+        </nav>
+      </div>
+    </div>
+  </mat-sidenav>
+
+  <mat-sidenav-content class="flex min-w-0 flex-col overflow-x-hidden">
+    <mat-toolbar class="justify-between gap-2">
+      <div class="flex min-w-0 flex-1 items-center gap-2">
+        <button
+          type="button"
+          mat-icon-button
+          (click)="toggleSidenav()"
+          aria-label="Alternar menú de navegación"
+        >
+          <mat-icon>menu</mat-icon>
+        </button>
+        <h1 class="min-w-0 truncate">Resumen de Joel</h1>
+      </div>
+
+      <div class="flex shrink-0 items-center gap-2">
+        <!-- position relative: ancla el calendario sobre el botón -->
+        <div class="relative">
+          <button
+            type="button"
+            mat-stroked-button
+            class="rounded-full"
+            aria-haspopup="dialog"
+            [attr.aria-label]="periodAriaLabel()"
+            (click)="picker.open()"
+          >
+            {{ periodLabel() }}
+          </button>
+          <input
+            class="pointer-events-none absolute inset-0 opacity-0"
+            tabindex="-1"
+            aria-hidden="true"
+            [matDatepicker]="picker"
+          />
+          <mat-datepicker
+            #picker
+            startView="multi-year"
+            [startAt]="period.date()"
+            (monthSelected)="onMonthSelected($event, picker)"
+          />
+        </div>
+        <button
+          type="button"
+          class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-(--mat-sys-secondary-container) font-medium text-(--mat-sys-on-secondary-container)"
+          [matMenuTriggerFor]="profileMenu"
+          aria-label="Abrir menú del perfil"
+        >
+          J
+        </button>
+      </div>
+    </mat-toolbar>
+
+    <main class="min-w-0 flex-1 overflow-x-hidden overflow-y-auto p-4">
+      <router-outlet />
+    </main>
+  </mat-sidenav-content>
+</mat-sidenav-container>
+
+<mat-menu #profileMenu="matMenu">
+  <button type="button" mat-menu-item>
+    <mat-icon>swap_horiz</mat-icon>
+    <span>Cambiar perfil</span>
+  </button>
+</mat-menu>

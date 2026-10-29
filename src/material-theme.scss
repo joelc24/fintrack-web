@@ -4,17 +4,39 @@
 // Learn more about theming and how to use it for your application's
 // custom components at https://material.angular.dev/guide/theming
 @use '@angular/material' as mat;
+@use './_theme-colors' as theme-colors;
 
 html {
   height: 100%;
   @include mat.theme(
     (
       color: (
-        primary: mat.$cyan-palette,
-        tertiary: mat.$blue-palette,
+        primary: theme-colors.$primary-palette,
+        tertiary: theme-colors.$tertiary-palette,
       ),
       typography: Roboto,
       density: 0,
+    )
+  );
+
+  // Colores del shell. Los estilos de los componentes de Material ganan frente a las
+  // utilidades de Tailwind, así que se personalizan aquí con los tokens del tema.
+  @include mat.sidenav-overrides(
+    (
+      container-background-color: var(--mat-sys-surface-container),
+      container-divider-color: var(--mat-sys-outline-variant),
+    )
+  );
+
+  @include mat.toolbar-overrides(
+    (
+      container-background-color: var(--mat-sys-surface-container-lowest),
+    )
+  );
+
+  @include mat.list-overrides(
+    (
+      active-indicator-color: var(--mat-sys-primary-container),
     )
   );
 }
